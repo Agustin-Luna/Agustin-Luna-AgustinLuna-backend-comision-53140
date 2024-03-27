@@ -36,28 +36,39 @@ class ProductManager {
     }
     }
 
-    addProducts(title, description, price, thumbnail, code, stock) {
-    if (!title || !description || !price || !thumbnail || !code || !stock)
-        return "todos los parametros son requeridos";
-
+    addProducts(title, description, price, thumbnails = [], code, stock, category, status = true) {
+        let result = 'ocurrio un error' 
+    if (!title || !description || !price || !code || !stock || !category){
+        result  = "todos los parametros son requeridos title, description, price, code, stock, category,";
+    }else{
     const codigoRepetido = this.products.some((p) => p.code == code);
-    if (codigoRepetido)
-        return `el codigo ${code} ya se encuentra registrado en otro producto`;
+    if (codigoRepetido){
+        result = `el codigo ${code} ya se encuentra registrado en otro producto`;
+    }else{
+        ProductManager.idProducto = ProductManager.idProducto + 1;
+        const id = this.asignarIdProducto();
+        const nuevoProducto = {
+            id,
+            title,
+            description,
+            price,
+            thumbnails,
+            code,
+            stock,
+            category,
+            status
+        };
+        this.products.push(nuevoProducto);
+        this.guardarFile();
+        result = {
+            msg: 'producto agregado exitosamente',
+            producto: nuevoProducto
+        }
+        }
+    }
 
-    ProductManager.idProducto = ProductManager.idProducto + 1;
-    const id = this.asignarIdProducto();
-    const nuevoProducto = {
-        id,
-        title,
-        description,
-        price,
-        thumbnail,
-        code,
-        stock,
-    };
-    this.products.push(nuevoProducto);
-    this.guardarFile();
-    return "producto agregado exitosamente";
+
+    return result;
     }
 
     getProducts(limit = 0) {
@@ -67,24 +78,36 @@ class ProductManager {
     }
 
     getProductById(id) {
-    const producto = this.products.find((p) => p.id == id);
-    if (producto) {
-        return producto;
-    } else {
-        return console.log(message.error);
-    }
+        let status = false;
+        let resp = `el prod con id ${id} no existe`
+        const producto = this.products.find((p) => p.id == id);
+        if (producto) {
+        status = true
+        resp = producto;
+    } 
+    return {status, resp};
     }
 
     updateProduct(id, objetoUpdate) {
-    let msg = `el producto con id ${id} no existe`;
+    let result= `el producto con id ${id} no existe`;
     const index = this.products.findIndex((p) => p.id === id);
     if (index !== -1) {
         const { id, ...rest } = objetoUpdate;
-        this.products[index] = { ...this.products[index], ...rest };
+        const propsPermitidas = ['title', 'description',' price', 'thumbnails', 'code', 'stock', 'category',' status']
+        const propsActualizadas = Object.keys(rest)
+        .filter (propiedad => propsPermitidas.includes(propiedad))
+        .reduce((obj, key) => {
+            obj [key] = rest[key];
+            return obj;
+        }, {});
+        this.products[index] = { ...this.products[index], ...propsActualizadas};
         this.guardarFile();
-        msg = "producto actualizado";
-    }
-    return msg;
+        result  = {
+            msg: 'producto actualizado',
+            producto: this.products[index]
+        };
+    } 
+    return result;
     }
 
     deleteProduct(id) {
