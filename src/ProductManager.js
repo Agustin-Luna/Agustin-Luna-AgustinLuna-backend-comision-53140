@@ -1,9 +1,9 @@
-import fs from "fs";
+import fs from 'fs';
 
 class ProductManager {
     products;
     path;
-    static idProducto = 0;
+
 
     constructor() {
     this.path = "./data/productos.json";
@@ -36,7 +36,7 @@ class ProductManager {
     }
     }
 
-    addProducts(title, description, price, thumbnails = [], code, stock, category, status = true) {
+    addProducts({title, description, price, thumbnails = [], code, stock, category, status = true}) {
         let result = 'ocurrio un error' 
     if (!title || !description || !price || !code || !stock || !category){
         result  = "todos los parametros son requeridos title, description, price, code, stock, category,";
@@ -45,7 +45,6 @@ class ProductManager {
     if (codigoRepetido){
         result = `el codigo ${code} ya se encuentra registrado en otro producto`;
     }else{
-        ProductManager.idProducto = ProductManager.idProducto + 1;
         const id = this.asignarIdProducto();
         const nuevoProducto = {
             id,

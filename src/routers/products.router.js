@@ -16,8 +16,7 @@ router.get("/:pid", (req, res) => {
 });
 
 router.post('/', (req,res) => {
-    const {title, description, price, thumbnails, code, stock, category, status} = req.body;
-    const result = prod.addProducts(title, description, price, thumbnails, code, stock, category, status);
+    const result = prod.addProducts({...req.body});
     return res.json ({result})
 });
 

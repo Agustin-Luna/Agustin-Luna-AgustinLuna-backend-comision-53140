@@ -4,7 +4,6 @@ import ProductManager from "./ProductManager.js";
 class CartsManager {
     carts;
     path;
-    static idProducto = 0;
 
     constructor() {
     this.path = "./data/carritos.json";
