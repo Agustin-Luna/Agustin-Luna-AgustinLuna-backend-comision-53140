@@ -1,40 +1,14 @@
 import { Router } from "express";
-import ProductManager from "../ProductManager.js";
-import { prod } from "../app.js";
+import { addProducts, deleteProduct, getProductById, getProducts, updateProduct } from "../controller/products.controller.js";
 
 
 const router = Router();
 
-router.get("/", (req, res) => {
-    const { limit } = req.query;
-    return res.json({ productos: prod.getProducts(limit) });
-});
-
-router.get("/:pid", (req, res) => {
-    const { pid } = req.params;
-    return res.json({ producto: prod.getProductById(Number(pid)) });
-});
-
-router.post('/', (req,res) => {
-    const result = prod.addProducts({...req.body});
-    return res.json ({result})
-});
-
-router.put('/:pid', (req,res) => {
-    const { pid } = req.params;
-    const result = prod.updateProduct(Number(pid), req.body);
-    return res.json({result});
-});
-
-router.delete('/:pid', (req, res) => {
-    const { pid } = req.params;
-    const result = prod.deleteProduct(Number(pid));
-    return res.json({result});
-});
-
-
-
-
+router.get("/", getProducts);
+router.get("/:pid", getProductById);
+router.post('/', addProducts);
+router.put('/:pid', updateProduct);
+router.delete('/:pid', deleteProduct);
 
 
 export default router;

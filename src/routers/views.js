@@ -1,18 +1,21 @@
 import { Router } from "express";
-import ProductManager from "../ProductManager.js";
-import { prod } from "../app.js";
+import { productModel } from "../models/products.js";
 
 
 const router = Router();
 
-router.get('/', (req,res) => {
-    const productos = prod.getProducts()
-    return res.render('home', {productos})
+router.get('/', async(req,res) => {
+    const productos = await productModel.find().lean()
+    return res.render('home', {productos, styles: 'styles.css', title: 'Home'})
 })
 
 
 router.get('/RealTimeProducts', (req,res) => {
-    return res.render('RealTimeProducts')
+    return res.render('RealTimeProducts',{ title:'Real Time Products'})
+})
+
+router.get('/chat', (req,res) => {
+    return res.render('chat', {styles: 'chat.css', title:'Chat'})
 })
 
 

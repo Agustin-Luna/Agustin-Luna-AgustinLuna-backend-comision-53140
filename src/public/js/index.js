@@ -6,7 +6,7 @@ socket.on('productos', productos => {
     productos.forEach(producto => {
         const row = tBody.insertRow()
         row.innerHTML = `
-            <td>${producto.id}</td>
+            <td>${producto._id}</td>
             <td>${producto.title}</td>
             <td>${producto.description}</td>
             <td>${producto.price}</td>
