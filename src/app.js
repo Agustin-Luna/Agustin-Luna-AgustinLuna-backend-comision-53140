@@ -6,13 +6,13 @@ import { engine } from 'express-handlebars'
 import __dirname from "./utils.js";
 import views from './routers/views.js'
 import { dbConnection } from "./database/config.js";
-import { productModel } from "./models/products.js";
 import { messageModel } from "./models/messages.js";
 import 'dotenv/config'
+import { addProductsService, getProductsService } from "./services/products.services.js";
 
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = 8080;
 
 
 app.use(express.json());
@@ -34,10 +34,11 @@ const io = new Server(expressServer)
 
 io.on('connection', async(socket) => {
     //product
-    const productos = await productModel.find()
-    socket.emit('productos', productos)
+    const {payload}= await getProductsService({})
+    const productos = payload
+    socket.emit('productos', payload)
     socket.on('agregarProducto', async (producto) => {
-        const newProduct = await productModel.create({...producto})
+        const newProduct = await addProductsService({...producto})
         if(newProduct){
             productos.push(newProduct)
         }

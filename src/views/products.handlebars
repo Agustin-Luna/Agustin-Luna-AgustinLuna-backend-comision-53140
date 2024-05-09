@@ -1,0 +1,86 @@
+<div>
+    <h1>Lista de productos</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Código</th>
+                <th>Stock</th>
+                <th>Categoría</th>
+                <th>Estado</th>
+                <th>Imagen</th>
+                <th>Agregar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each result.payload}}
+            <tr>
+                <td>{{this.title}}</td>
+                <td>{{this.description}}</td>
+                <td>{{this.price}}</td>
+                <td>{{this.code}}</td>
+                <td>{{this.stock}}</td>
+                <td>{{this.category}}</td>
+                <td>
+                    {{#if this.status}}
+                    Activo
+                    {{else}}
+                    Desactivado
+                    {{/if}}
+                </td>
+                <td>
+                    {{#if this.thumbnail.length}}
+                    <a href="{{this.thumbnails.[0]}}" target="_blank">{{this.thumbnails.[0]}}</a>
+                    {{else}}
+                    No hay imagen
+                    {{/if}}
+                </td>
+                <td>
+                    <button class="cart-button" onclick="addToCart('{{this._id}}')">
+                        <i class="cart-icon bi bi-cart" ></i>
+                    </button>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <span> Limite por página: {{result.limit}}</span><br>
+        {{#if result.query}}
+        <span>Filtrado por: {{result.query}}</span><br>
+        {{/if}}
+
+        {{#if result.hasPrevPage}}
+        <a href="?page={{result.prevPage}}&limit={{result.limit}}{{#if result.query}}&query={{result.query}}{{/if}}">Página anterior</a>
+        {{/if}}
+
+        <span>Página {{result.page}} de {{result.totalPage}}</span>
+
+        {{#if result.nextPage}}
+        <a href="?page={{result.nextPage}}&limit={{result.limit}}{{#if result.query}}&query={{result.query}}{{/if}}">Página siguiente</a>
+        {{/if}}
+    </div>
+
+    <script>
+        function addToCart(productId){
+        console.log({productId})
+            const idCart = '66397ad87fa5763929bc9dc4'
+            fetch(`/api/carts/${idCart}/product/${productId}`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'Application/json'
+                },
+            }).then(resp => res.json())
+            .then(data => {
+                console.log(data)
+            }).catch(error => {
+                console.log(error)
+            })
+        }
+    </script>
+
+</div>
