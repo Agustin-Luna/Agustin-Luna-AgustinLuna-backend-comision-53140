@@ -1,34 +1,26 @@
 import { Router } from "express";
 import { getProductsService } from "../services/products.services.js";
 import { getCartByIdService } from "../services/cart.services.js";
-
+import { LoginGetViews, cartsIdViews, chatViews, homeView, loginPostViews, logout, productsViews, realTimeProductsViews, registroGetViews, registroPostViews } from "../controller/views.controller.js";
+import { auth } from "../middleware/auth.js";
 
 
 const router = Router();
 
-router.get('/', async(req,res) => {
-    const {payload} = await getProductsService({})
-    return res.render('home', {productos: payload, styles: 'styles.css', title: 'Home'})
-})
+router.get('/',homeView)
+router.get('/RealTimeProducts', auth, realTimeProductsViews)
+router.get('/chat', auth,chatViews)
+router.get('/products', auth,productsViews)
+router.get('/cart/:cid', auth,cartsIdViews)
+
+router.get('/login', LoginGetViews)
+router.post('/login', loginPostViews)
+
+router.get('/registro', registroGetViews)
+router.post('/registro',registroPostViews)
+
+router.get('/logout', logout)
 
 
-router.get('/RealTimeProducts', (req,res) => {
-    return res.render('RealTimeProducts',{ title:'Real Time Products', styles:'styles.css'})
-})
-
-router.get('/chat', (req,res) => {
-    return res.render('chat', {styles: 'chat.css', title:'Chat'})
-})
-
-router.get('/products', async (req,res) => {
-    const result = await getProductsService({...req.query})
-    return res.render('products', {title: 'productos', result, styles: 'products.css' })
-})
-
-router.get('/cart/:cid', async(req,res) => {
-    const {cid} = req.params
-    const carrito = await getCartByIdService(cid)
-    return res.render('cart', {title: 'carrito', carrito, styles: 'cart.css'})
-})
 
 export default router;

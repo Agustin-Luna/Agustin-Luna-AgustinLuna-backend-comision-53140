@@ -10,4 +10,3 @@ export const dbConnection = async() => {
         process.exit(1)
     }
 }  
-// mongodb+srv://agustinluna:Riverplate01@cluster0.hsbubgh.mongodb.net/ecommerce

@@ -1,14 +1,17 @@
 import express from "express";
-import productsRouter from './routers/products.router.js'
-import cartsRouter from './routers/carts.router.js'
 import { Server } from 'socket.io'
 import { engine } from 'express-handlebars'
 import __dirname from "./utils.js";
-import views from './routers/views.js'
+import session from "express-session";
+import MongoStore from "connect-mongo";
+
 import { dbConnection } from "./database/config.js";
+import views from './routers/views.js'
+import productsRouter from './routers/products.router.js'
+import cartsRouter from './routers/carts.router.js'
 import { messageModel } from "./models/messages.js";
-import 'dotenv/config'
 import { addProductsService, getProductsService } from "./services/products.services.js";
+import 'dotenv/config'
 
 
 const app = express();
@@ -23,9 +26,21 @@ app.engine('handlebars', engine())
 app.set('views', __dirname + '/views')
 app.set('view engine', 'handlebars')
 
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl:'mongodb+srv://agustinluna:Riverplate01@cluster0.hsbubgh.mongodb.net/ecommerce',
+        ttl: 3600
+    }),
+    secret:"coderCoder123",
+    resave: true,
+    saveUninitialized: true
+}))
+
 app.use('/', views);
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
+
+app.use('/',views)
 
 await dbConnection()
 
