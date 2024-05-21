@@ -4,6 +4,7 @@ import { engine } from 'express-handlebars'
 import __dirname from "./utils.js";
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import  passport  from "passport";
 
 import { dbConnection } from "./database/config.js";
 import views from './routers/views.js'
@@ -12,6 +13,8 @@ import cartsRouter from './routers/carts.router.js'
 import { messageModel } from "./models/messages.js";
 import { addProductsService, getProductsService } from "./services/products.services.js";
 import 'dotenv/config'
+import { initializaPassport } from "./config/passport.js";
+
 
 
 const app = express();
@@ -35,6 +38,11 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }))
+
+//config passport 
+initializaPassport()
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use('/', views);
 app.use('/api/products', productsRouter);

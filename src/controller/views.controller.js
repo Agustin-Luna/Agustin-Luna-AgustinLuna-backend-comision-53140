@@ -1,6 +1,5 @@
 import { getCartByIdService } from "../services/cart.services.js"
 import { getProductsService } from "../services/products.services.js"
-import { getUserEmail, userRegistro } from "../services/user.js"
 
 
 export const homeView = async (req, res) => {
@@ -33,42 +32,36 @@ export const cartsIdViews = async (req, res) =>{
 }
 
 export const LoginGetViews = async(req,res) =>{
+    if(req.session.user)
+        return res.redirect('/')
+
     return res.render('login',{ title: 'login',styles: 'login.css' })
 }
 
 
 export const registroGetViews = async(req,res) =>{
+    if(req.session.user)
+        return res.redirect('/')
     return res.render('registro', {title: 'registro', styles: 'login.css'})
 }
 
 export const registroPostViews = async(req,res) =>{
-    const {password, confirmPassword} = req.body
-    
-    if(password !== confirmPassword)
+    if(!req.user)
         return res.redirect('/registro')
-    const user = await userRegistro({...req.body})
-
-    if(user){
-        const userName = `${user.name} ${user.lastName}`
-        req.session.user = userName
-        req.session.rol = user.rol
-        return res.redirect('/')
-    }
-    return res.redirect('/registro')
+    return res.redirect('/login')
 }
 
-export const loginPostViews = async(req,res) =>{
-    const {email, password} = req.body
+export const login = async(req,res) =>{
+    if(!req.user)
+        return res.redirect('/login')
 
-    const user = await getUserEmail(email)
-
-    if(user && user.password === password){
-        const userName = `${user.name} ${user.lastName}`
-        req.session.user = userName
-        req.session.rol = user.rol
-        return res.redirect('/')
+    req.session.user = {
+        name: req.body.name,
+        lastName: req.body.lastName, 
+        email: req.body.email,
+        rol: req.body.rol,
     }
-    return res.redirect('/login')
+    return res.redirect('/')
 }
 
 export const logout = async (req,res) => {
