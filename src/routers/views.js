@@ -9,10 +9,10 @@ import  passport  from "passport";
 const router = Router();
 
 router.get('/',homeView)
-router.get('/RealTimeProducts', [auth, admin], realTimeProductsViews)
+router.get('/RealTimeProducts', auth, realTimeProductsViews)
 router.get('/chat', auth,chatViews)
-router.get('/products',[auth, admin],productsViews)
-router.get('/cart/:cid', [auth, admin],cartsIdViews)
+router.get('/products',auth,productsViews)
+router.get('/cart/:cid', auth,cartsIdViews)
 router.get('/login', LoginGetViews)
 router.get('/registro', registroGetViews)
 router.get('/logout', logout)
