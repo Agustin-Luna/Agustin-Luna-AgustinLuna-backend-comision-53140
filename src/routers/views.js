@@ -1,6 +1,4 @@
 import { Router } from "express";
-import { getProductsService } from "../services/products.services.js";
-import { getCartByIdService } from "../services/cart.services.js";
 import { LoginGetViews, cartsIdViews, chatViews, homeView, login, logout, productsViews, realTimeProductsViews, registroGetViews, registroPostViews } from "../controller/views.controller.js";
 import { admin, auth } from "../middleware/auth.js";
 import  passport  from "passport";

@@ -1,7 +1,7 @@
 import passport from 'passport'
 import local from 'passport-local'
 import GithubStrategy from 'passport-github2'
-import { getUserById, getUserEmail, userRegistro } from '../services/user.js'
+import { UserRepo } from '../repositories/index.js'
 import { createHash, isValidPassword } from '../utils/bcryptPassword.js'
 
 
@@ -11,10 +11,10 @@ export const initializaPassport  = () => {
 
     passport.use('registro', new localStrategy(
         {
-            passReqToCallback: true, // Corrected capitalization
+            passReqToCallback: true, 
             usernameField: 'email'
         },
-        async (req, username, password, done) => { // Corrected parameter order
+        async (req, username, password, done) => { 
             try {
                 const { confirmPassword } = req.body;
                 if (password !== confirmPassword) {
@@ -22,14 +22,17 @@ export const initializaPassport  = () => {
                     return done(null, false, { message: 'Passwords do not match' });
                 }
     
-                const user = await getUserEmail(username);
+                
+                const user = await UserRepo.getUserByEmail(username);
+
                 if (user) {
                     console.log('Usuario existente');
                     return done(null, false, { message: 'User already exists' });
                 }
     
                 req.body.password = createHash(password);
-                const newUser = await userRegistro({ ...req.body }); // Ensure userRegistro is awaited
+                
+                const newUser = await UserRepo.userRegistro({ ...req.body });
     
                 if (newUser) {
                     return done(null, newUser);
@@ -46,7 +49,8 @@ export const initializaPassport  = () => {
         { usernameField: 'email'}, 
         async(username, password, done) =>{
             try {
-                const user = await getUserEmail(username)
+                
+                const user = await UserRepo.getUserByEmail(username);
 
                 if(!user){
                     console.log('el usuario no existe')
@@ -68,7 +72,8 @@ export const initializaPassport  = () => {
         })
 
         passport.deserializeUser(async (id, done) =>{
-            const user = await getUserById(id)
+            
+            const user = await UserRepo.getUserById(id)
             done(null,user)
         })
 
@@ -81,7 +86,8 @@ export const initializaPassport  = () => {
             async(accessToken, refreshToken, profile, done) =>{
                 try {
                     const email = profile._json.email
-                    const user = await getUserEmail(email)
+                    
+                    const user = await UserRepo.getUserByEmail(email)
                     if(user)
                         return done(null, user)
 
@@ -92,7 +98,8 @@ export const initializaPassport  = () => {
                         image:profile._json.avatar_url,
                         github:true
                     }
-                    const result = await userRegistro({...newUser})
+                    
+                    const result = await UserRepo.userRegistro({...newUser})
                     return done(null,result)
                 } catch (error) {
                     done(error)

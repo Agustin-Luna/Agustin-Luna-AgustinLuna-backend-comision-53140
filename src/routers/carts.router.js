@@ -1,17 +1,18 @@
 import { Router } from "express";
 import { addProductInCart, createCarts, deleteCart, deleteProductsInCart, getCartById, updateProductsInCart } from "../controller/carts.controller.js";
-
+import { validarJWT } from "../middleware/auth.js";
 
 const router = Router();
 
 
-router.get('/:cid', getCartById);
-router.post('/', createCarts);
+router.get('/:cid',validarJWT,  getCartById);
+router.post('/',validarJWT,  createCarts);
 
-router.post('/:cid/product/:pid', addProductInCart);
-router.delete('/:cid/products/:pid', deleteProductsInCart)
-router.put('/:cid/products/:pid', updateProductsInCart)
-router.delete('/:cid', deleteCart)
+router.post('/:cid/product/:pid',validarJWT,  addProductInCart);
+router.delete('/:cid/products/:pid',validarJWT,  deleteProductsInCart)
+router.put('/:cid/products/:pid',validarJWT,  updateProductsInCart)
+router.delete('/:cid',validarJWT,  deleteCart)
 
-export default router;
+
+export {router as cartsRouter}
 

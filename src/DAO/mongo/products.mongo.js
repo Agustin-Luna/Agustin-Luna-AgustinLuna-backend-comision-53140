@@ -1,9 +1,9 @@
-import { productModel } from "../models/products.js";
+import { productModel } from "./models/products.js";
 
 
 
-export const getProductsService = async({limit = 2, page = 1, sort, query}) =>{
-    try {
+export const getProducts = async({limit = 2, page = 1, sort, query}) =>{
+
         page = page == 0 ? 1 :page;
         page = Number(page);
         limit = Number(limit)
@@ -42,45 +42,16 @@ export const getProductsService = async({limit = 2, page = 1, sort, query}) =>{
             nextLink: '',
             payload: productos,
         }
-    } catch (error) {
-        console.log('getProductsService -> ', error)
-        throw error
-    }
+
 }
 
-export const getProductByIdService = async(pid) =>{
-    try {
-        return await productModel.findById(pid)
-    } catch (error) {
-        console.log('getProductByIdService -> ', error)
-        throw error
-    }
-}
+export const getProductById = async(pid) => await productModel.findById(pid)
 
-export const addProductsService = async({title, description, price, thumbnail, code, stock, category,status}) =>{
-    try {
-        return await productModel.create({title, description, price, thumbnail, code, stock, category,status})
-    } catch (error) {
-        console.log('addProductsService -> ', error)
-        throw error
-    }
-}
+export const getProductByCode = async (code) => await productModel.findOne({code})
 
-export const updateProductService = async(pid, rest) =>{
-    try {
-        return await productModel.findByIdAndUpdate(pid, {...rest}, {new:true})
-    } catch (error) {
-        console.log('updateProductService -> ', error)
-        throw error
-    }
-}
+export const addProducts = async({title, description, price, thumbnail, code, stock, category,status}) => await productModel.create({title, description, price, thumbnail, code, stock, category,status})
 
+export const updateProduct = async(pid, rest) => await productModel.findByIdAndUpdate(pid, {...rest}, {new:true})
 
-export const deleteProductService = async(pid) =>{
-    try {
-        return await productModel.findByIdAndDelete(pid)
-    } catch (error) {
-        console.log('deleteProductService -> ', error)
-        throw error
-    }
-}
+export const deleteProduct = async(pid) => await productModel.findByIdAndDelete(pid)
+
