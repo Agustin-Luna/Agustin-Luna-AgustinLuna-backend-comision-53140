@@ -1,7 +1,8 @@
-import { Router } from "express";
+import { Router } from "express";altime
 import { LoginGetViews, cartsIdViews, chatViews, homeView, login, logout, productsViews, realTimeProductsViews, registroGetViews, registroPostViews } from "../controller/views.controller.js";
-import { admin, auth } from "../middleware/auth.js";
+import { auth } from "../middleware/auth.js";
 import  passport  from "passport";
+
 
 
 const router = Router();
