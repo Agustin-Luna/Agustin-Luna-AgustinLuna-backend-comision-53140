@@ -25,7 +25,6 @@ export const productsViews = async (req, res) => {
 
 export const cartsIdViews = async (req, res) =>{
     const {cid} = req.params
-    // const carrito = await getCartByIdService(cid)
     const carrito = await CartRepo.getCartById(cid)
     const user = req.session.user
     return res.render('cart', {title: 'carrito', carrito, styles: 'cart.css', user})
@@ -34,7 +33,6 @@ export const cartsIdViews = async (req, res) =>{
 export const LoginGetViews = async(req,res) =>{
     if(req.session.user)
         return res.redirect('/')
-
     return res.render('login',{ title: 'login',styles: 'login.css' })
 }
 
