@@ -48,19 +48,24 @@
             {{/each}}
         </tbody>
     </table>
+
     <div class="pagination">
         <span> Limite por página: {{result.limit}}</span><br>
         {{#if result.query}}
         <span>Filtrado por: {{result.query}}</span><br>
         {{/if}}
+
         {{#if result.hasPrevPage}}
         <a href="?page={{result.prevPage}}&limit={{result.limit}}{{#if result.query}}&query={{result.query}}{{/if}}">Página anterior</a>
         {{/if}}
+
         <span>Página {{result.page}} de {{result.totalPage}}</span>
+
         {{#if result.nextPage}}
         <a href="?page={{result.nextPage}}&limit={{result.limit}}{{#if result.query}}&query={{result.query}}{{/if}}">Página siguiente</a>
         {{/if}}
     </div>
+
     <script>
         function addToCart(productId){
         console.log({productId})
@@ -78,4 +83,5 @@
             })
         }
     </script>
+
 </div>
