@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
+import 'dotenv/config'
 
 
 export const dbConnection = async() => {
     try {
-        await mongoose.connect('mongodb+srv://agustinluna:Riverplate01@cluster0.hsbubgh.mongodb.net/ecommerce')
+        await mongoose.connect(process.env.URI_MONGO_DB)
     console.log('la base esta en linea')
     } catch (error) {
         console.log(`error al usar la base de datos. ${error}`)

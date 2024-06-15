@@ -3,6 +3,7 @@ import local from 'passport-local'
 import GithubStrategy from 'passport-github2'
 import { UserRepo } from '../repositories/index.js'
 import { createHash, isValidPassword } from '../utils/bcryptPassword.js'
+import 'dotenv/config'
 
 
 const localStrategy = local.Strategy
@@ -79,9 +80,9 @@ export const initializaPassport  = () => {
 
         passport.use('github', new GithubStrategy(
             {
-                clientID: 'Iv23liVxI7xECk3M9GlH',
-                clientSecret: 'ae131783e88363ede818c829ba95bca28ca1a600',
-                callbackURL: 'http://localhost:8080/callbackGithub'
+                clientID:  process.env.client_ID ,
+                clientSecret: process.env.client_Secret,
+                callbackURL: process.env.callback_URL
             },
             async(accessToken, refreshToken, profile, done) =>{
                 try {

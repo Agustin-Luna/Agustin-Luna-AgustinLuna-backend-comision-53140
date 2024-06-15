@@ -11,13 +11,13 @@ import { dbConnection } from "./database/config.js";
 import views from './routers/views.js'
 
 import { initializaPassport } from "./config/passport.js";
-//route
+
 import { productsRouter, cartsRouter } from "./routers/index.js";
 import { messageModel } from "./DAO/mongo/models/messages.js";
 import { ProductRepo } from "./repositories/index.js";
 
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT
 
 
 app.use(express.json());
@@ -30,7 +30,7 @@ app.set('view engine', 'handlebars')
 
 app.use(session({
     store: MongoStore.create({
-        mongoUrl:'mongodb+srv://agustinluna:Riverplate01@cluster0.hsbubgh.mongodb.net/ecommerce',
+        mongoUrl:process.env.URI_MONGO_DB,
         ttl: 3600
     }),
     secret:"coderCoder123",
@@ -44,13 +44,9 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use('/', views);
-//endpoint
-
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 
-
-//inicio base de datos
 await dbConnection()
 
 const expressServer = app.listen(PORT, () => {console.log(`el server esta en linea en el puerto ${PORT}`); });
